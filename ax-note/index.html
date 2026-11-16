@@ -1,1 +1,821 @@
-<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>準備中</title><p>準備中です。</p>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#1E2A44">
+<title>AX学習ノート</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231E2A44'/%3E%3Crect x='6' y='19' width='20' height='5' fill='%23FFE24A'/%3E%3Ctext x='16' y='21' font-family='sans-serif' font-size='13' font-weight='700' fill='%23fff' text-anchor='middle'%3EAX%3C/text%3E%3C/svg%3E">
+<style>/* =========================================================
+   AX学習ノート — design system
+   コンセプト：方眼ノート × 蛍光マーカー × インデックス付箋
+   ========================================================= */
+:root{
+  --font: "Meiryo UI","Meiryo","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Noto Sans CJK JP","Yu Gothic UI",sans-serif;
+  --paper:#FBFCFD; --grid:#E8EEF4; --grid-strong:#DCE4EE;
+  --panel:#FFFFFF; --panel-2:#F3F6FA;
+  --ink:#1E2A44; --ink-2:#47546E; --ink-3:#7A869B; --rule:#D3DCE7;
+  --marker:rgba(255,226,74,.78); --marker-solid:#FFE24A;
+  --ok:#1E8E5A; --ng:#C93A3A; --warn:#B7791F;
+  --g1:#2F6FDE; --g2:#0E8C77; --g3:#6B46D6; --g4:#D23F7E; --g5:#5B6B84;
+  --g:var(--ink); --g-ink:var(--ink);
+  --g-tint:color-mix(in srgb,var(--g) 9%,var(--panel));
+  --g-tint-2:color-mix(in srgb,var(--g) 18%,var(--panel));
+  --g-line:color-mix(in srgb,var(--g) 45%,var(--panel));
+  --radius-s:6px; --radius:10px;
+  --shadow:0 1px 0 rgba(30,42,68,.06),0 8px 24px -16px rgba(30,42,68,.35);
+  --top:58px; --toc:288px; --tabs:64px; --measure:44rem;
+  --fs:16.5px;
+  color-scheme:light;
+}
+html[data-theme="dark"]{
+  --paper:#111A2C; --grid:#17223A; --grid-strong:#1D2943;
+  --panel:#16213A; --panel-2:#1B2742;
+  --ink:#E7ECF5; --ink-2:#B6C0D3; --ink-3:#8793AA; --rule:#2B3958;
+  --marker:rgba(255,214,51,.38); --marker-solid:#E8C531;
+  --ok:#4CC38A; --ng:#FF7A7A; --warn:#F0B451;
+  --g1:#6E9DFF; --g2:#3CC7AE; --g3:#A58BFF; --g4:#FF7EB0; --g5:#9AA9C2;
+  --shadow:0 1px 0 rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+html[data-fs="l"]{--fs:18px} html[data-fs="xl"]{--fs:19.5px}
+body[data-genre="g1"]{--g:var(--g1)} body[data-genre="g2"]{--g:var(--g2)}
+body[data-genre="g3"]{--g:var(--g3)} body[data-genre="g4"]{--g:var(--g4)}
+body[data-genre="g5"]{--g:var(--g5)}
+
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:var(--fs);-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--top) + 16px)}
+body{margin:0;font-family:var(--font);color:var(--ink);line-height:1.9;letter-spacing:.02em;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;background-attachment:fixed;
+  font-feature-settings:"palt" 0;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:var(--g);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:3px solid var(--g);outline-offset:2px;border-radius:4px}
+button{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+.ic{width:1.25em;height:1.25em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.25em;flex:none}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- 錠前画面 ---------- */
+#gate{min-height:100vh;display:grid;place-items:center;padding:24px}
+.gate-card{width:min(440px,100%);background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:36px 32px;box-shadow:var(--shadow)}
+.gate-card h1{margin:0 0 4px;font-size:1.55rem;line-height:1.4}
+.gate-card p{margin:0 0 22px;color:var(--ink-2);font-size:.92rem}
+.gate-card label{display:block;font-size:.85rem;color:var(--ink-2);margin-bottom:6px}
+.gate-card input[type=password]{width:100%;padding:12px 14px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink);font:inherit}
+.gate-row{display:flex;align-items:center;gap:8px;margin:14px 0 20px;font-size:.88rem;color:var(--ink-2)}
+.btn{display:inline-flex;align-items:center;gap:.5em;border:1px solid var(--ink);background:var(--ink);color:var(--panel);padding:10px 20px;border-radius:999px;cursor:pointer;font-weight:700}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.gate-err{color:var(--ng);font-size:.88rem;min-height:1.4em;margin-top:10px}
+.gate-mark{display:inline-block;background:linear-gradient(transparent 58%,var(--marker) 58%);padding:0 .1em}
+
+/* ---------- トップバー ---------- */
+.topbar{position:sticky;top:0;z-index:40;height:var(--top);display:flex;align-items:center;gap:12px;padding:0 16px;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700;white-space:nowrap}
+.brand-mark{width:30px;height:30px;border-radius:7px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-size:.8rem;letter-spacing:0}
+.brand small{display:block;font-weight:400;font-size:.68rem;color:var(--ink-3);line-height:1.2}
+.brand b{display:block;line-height:1.3}
+.tb-spacer{flex:1}
+.search-box{position:relative;width:min(340px,40vw)}
+.search-box input{width:100%;padding:8px 12px 8px 36px;border:1px solid var(--rule);border-radius:999px;background:var(--panel);color:var(--ink);font:inherit;font-size:.9rem}
+.search-box .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+.icon-btn{border:1px solid transparent;background:transparent;border-radius:8px;padding:7px;cursor:pointer;color:var(--ink-2);display:inline-flex}
+.icon-btn:hover{background:var(--panel-2);color:var(--ink)}
+#menuBtn{display:none}
+
+/* ---------- レイアウト ---------- */
+.layout{display:grid;grid-template-columns:var(--toc) minmax(0,1fr) 84px;min-height:calc(100vh - var(--top))}
+.toc{position:sticky;top:var(--top);height:calc(100vh - var(--top));overflow:auto;padding:22px 14px 40px 20px;border-right:1px solid var(--rule);background:color-mix(in srgb,var(--paper) 70%,transparent);font-size:.86rem;line-height:1.55}
+.toc h2{font-size:.95rem;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+.toc .toc-lead{color:var(--ink-3);font-size:.78rem;margin:0 0 14px}
+.toc-prog{height:5px;background:var(--panel-2);border-radius:9px;overflow:hidden;margin:6px 0 16px}
+.toc-prog i{display:block;height:100%;background:var(--g);border-radius:9px;transition:width .3s}
+.toc details{margin:0 0 6px}
+.toc summary{cursor:pointer;list-style:none;padding:7px 8px;border-radius:8px;font-weight:700;color:var(--ink);display:flex;gap:8px;align-items:flex-start}
+.toc summary::-webkit-details-marker{display:none}
+.toc summary:hover{background:var(--panel-2)}
+.toc summary .lec{flex:none;font-size:.7rem;font-weight:700;color:var(--g);border:1px solid var(--g-line);border-radius:5px;padding:1px 5px;margin-top:2px}
+.toc ol{list-style:none;margin:2px 0 8px;padding:0 0 0 10px;border-left:2px solid var(--grid-strong)}
+.toc li a{display:flex;gap:6px;padding:4px 8px;border-radius:6px;color:var(--ink-2);text-decoration:none}
+.toc li a:hover{background:var(--panel-2);color:var(--ink)}
+.toc li a.on{color:var(--g);font-weight:700;background:var(--g-tint)}
+.toc li a .chk{flex:none;width:14px;height:14px;margin-top:3px;border-radius:50%;border:1.5px solid var(--rule)}
+.toc li a.done .chk{background:var(--g);border-color:var(--g);box-shadow:inset 0 0 0 2px var(--panel)}
+main{min-width:0;padding:0 40px 120px}
+.page{max-width:58rem;margin:0 auto}
+
+/* ---------- インデックス付箋（ジャンル切替） ---------- */
+.tabs{position:sticky;top:calc(var(--top) + 28px);align-self:start;display:flex;flex-direction:column;gap:6px;padding-top:0}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:76px;min-height:80px;padding:10px 4px;margin-left:auto;
+  border-radius:10px 0 0 10px;text-decoration:none;color:#fff;font-weight:700;font-size:.68rem;line-height:1.25;text-align:center;
+  background:var(--tc);box-shadow:var(--shadow);transform:translateX(8px);transition:transform .18s ease,width .18s ease}
+.tab .ic{width:20px;height:20px}
+.tab:hover,.tab[aria-current="page"]{transform:translateX(0);width:80px}
+.tab[aria-current="page"]{outline:3px solid color-mix(in srgb,var(--tc) 35%,transparent)}
+.tab.home{--tc:var(--ink)} .tab.t1{--tc:var(--g1)} .tab.t2{--tc:var(--g2)} .tab.t3{--tc:var(--g3)} .tab.t4{--tc:var(--g4)} .tab.t5{--tc:var(--g5)}
+html[data-theme="dark"] .tab{color:#0F1729}
+html[data-theme="dark"] .tab.home{--tc:#E7ECF5}
+
+/* ---------- 見出しとマーカー ---------- */
+.hl,mark{background:linear-gradient(transparent 58%,var(--marker) 58%);color:inherit;padding:0 .08em;border-radius:2px}
+.genre-hero{padding:56px 0 30px;margin-bottom:34px}
+.genre-hero .gno{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--g);font-size:.9rem;margin-bottom:10px}
+.genre-hero .gno .chip{background:var(--g);color:var(--panel);border-radius:6px;padding:2px 9px;font-size:.78rem}
+.genre-hero h1{font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.3;margin:0 0 16px;letter-spacing:.01em}
+.genre-hero h1 span{background:linear-gradient(transparent 62%,var(--g-tint-2) 62%)}
+.genre-hero .lead{font-size:1.05rem;color:var(--ink-2);max-width:var(--measure);margin:0 0 26px}
+.chapter-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0}
+.chapter-map a{display:block;text-decoration:none;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-left:5px solid var(--g);border-radius:8px;padding:12px 14px}
+.chapter-map a:hover{border-color:var(--g)}
+.chapter-map .cm-lec{font-size:.75rem;color:var(--g);font-weight:700}
+.chapter-map .cm-t{display:block;font-weight:700;line-height:1.5}
+.chapter-map .cm-n{font-size:.75rem;color:var(--ink-3)}
+
+/* 章 */
+.chapter{margin:0 0 72px}
+.chapter-head{position:relative;padding:28px 0 22px;margin:0 0 30px;border-top:6px solid var(--g)}
+.chapter-head .ch-meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--ink-3);margin-bottom:6px}
+.chapter-head .ch-meta b{color:var(--g)}
+.chapter-head h2{font-size:clamp(1.55rem,2.6vw,2.1rem);line-height:1.35;margin:0 0 12px}
+.chapter-head .ch-lead{color:var(--ink-2);max-width:var(--measure);margin:0}
+.chapter-head .ch-goals{margin:16px 0 0;padding:14px 18px;background:var(--panel);border:1px solid var(--rule);border-radius:var(--radius);max-width:var(--measure)}
+.chapter-head .ch-goals h3{font-size:.85rem;margin:0 0 4px;color:var(--g)}
+.chapter-head .ch-goals ul{margin:0;padding-left:1.2em}
+
+/* 節（小項目） */
+.topic{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:30px 34px 22px;margin:0 0 26px;box-shadow:var(--shadow)}
+.topic>h3{font-size:1.32rem;line-height:1.5;margin:0 0 14px;padding-left:16px;position:relative}
+.topic>h3::before{content:"";position:absolute;left:0;top:.28em;bottom:.28em;width:5px;border-radius:3px;background:var(--g)}
+.topic .tno{display:block;font-size:.76rem;color:var(--ink-3);font-weight:400;margin-bottom:2px}
+.topic h4{font-size:1.05rem;margin:26px 0 8px;line-height:1.55}
+.topic h5{font-size:.95rem;margin:18px 0 6px;color:var(--ink-2)}
+.prose{max-width:var(--measure)}
+.prose p,.topic>p{margin:0 0 1em}
+.prose ul,.prose ol,.topic>ul,.topic>ol{margin:0 0 1.1em;padding-left:1.4em}
+.prose li{margin:.25em 0}
+.prose strong,.topic strong{font-weight:700}
+.topic-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:20px;padding-top:14px;border-top:1px dashed var(--rule)}
+.src{font-size:.76rem;color:var(--ink-3)}
+.src::before{content:"出典 ";font-weight:700}
+.done-btn{border:1px solid var(--rule);background:var(--panel);border-radius:999px;padding:5px 14px;font-size:.8rem;cursor:pointer;color:var(--ink-2);display:inline-flex;gap:6px;align-items:center}
+.done-btn[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:var(--panel)}
+
+/* 用語・略語 */
+abbr[title],dfn[title]{text-decoration:underline dotted var(--ink-3);text-underline-offset:3px;cursor:help;font-style:normal}
+.term{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:14px 0 18px;padding:14px 18px;border-radius:var(--radius);background:var(--panel-2);border:1px solid var(--rule);font-size:.93rem}
+.term dt{font-weight:700;color:var(--g)}
+.term dd{margin:0}
+@media (max-width:640px){.term{grid-template-columns:1fr}.term dd{margin-bottom:8px}}
+
+/* コールアウト */
+.callout{position:relative;margin:18px 0;padding:14px 18px 14px 50px;border-radius:var(--radius);font-size:.95rem;line-height:1.85}
+.callout>.ic{position:absolute;left:16px;top:16px;width:22px;height:22px}
+.callout>:last-child{margin-bottom:0}
+.callout p{margin:0 0 .5em}
+.callout ul{margin:.2em 0 .4em;padding-left:1.2em}
+.callout .c-t{display:block;font-weight:700;margin-bottom:2px}
+.callout.point{background:var(--g-tint);border:1px solid var(--g-line)}
+.callout.point>.ic{color:var(--g)}
+.callout.warn{background:color-mix(in srgb,var(--warn) 9%,var(--panel));border:1px solid color-mix(in srgb,var(--warn) 40%,var(--panel))}
+.callout.warn>.ic{color:var(--warn)}
+.callout.note{background:transparent;border:1.5px dashed var(--rule)}
+.callout.note>.ic{color:var(--ink-3)}
+.callout.note .c-t::after{content:"（講義資料外の補足）";font-weight:400;font-size:.78rem;color:var(--ink-3);margin-left:6px}
+.callout.quote{background:transparent;border-left:4px solid var(--g);border-radius:0;padding:6px 0 6px 20px;font-size:1.02rem;color:var(--ink)}
+.callout.quote cite{display:block;font-style:normal;font-size:.8rem;color:var(--ink-3);margin-top:4px}
+.callout.law{background:var(--panel-2);border:1px solid var(--rule);font-size:.9rem}
+.callout.law>.ic{color:var(--g)}
+
+/* プロンプト（コピー可能） */
+.prompt{position:relative;margin:16px 0 20px;border:1px solid var(--g-line);border-radius:12px;background:var(--panel);overflow:hidden}
+.prompt-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 12px;background:var(--g-tint);font-size:.78rem;font-weight:700;color:var(--g)}
+.prompt pre{margin:0;padding:14px 16px;white-space:pre-wrap;word-break:break-word;font-family:var(--font);font-size:.93rem;line-height:1.8;color:var(--ink)}
+.copy-btn{border:1px solid var(--g-line);background:var(--panel);color:var(--g);border-radius:999px;padding:2px 10px;font-size:.74rem;cursor:pointer}
+.copy-btn.ok{background:var(--g);color:var(--panel)}
+
+/* 表 */
+.tbl-wrap{overflow-x:auto;margin:14px 0 20px;border:1px solid var(--rule);border-radius:var(--radius);background:var(--panel)}
+table.tbl{border-collapse:collapse;width:100%;font-size:.9rem;line-height:1.65;min-width:520px}
+.tbl th,.tbl td{padding:9px 12px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.tbl thead th{background:var(--g-tint);color:var(--ink);font-weight:700;white-space:nowrap}
+.tbl tbody tr:last-child td,.tbl tbody tr:last-child th{border-bottom:0}
+.tbl tbody th{font-weight:700;background:var(--panel-2);white-space:nowrap}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl td.c,.tbl th.c{text-align:center}
+.tbl .yes{color:var(--ok);font-weight:700}.tbl .no{color:var(--ng);font-weight:700}
+
+/* ---------- 図解（フィギュア） ---------- */
+.fig{margin:22px 0 10px;border:1px solid var(--rule);border-radius:12px;background:var(--paper);overflow:hidden}
+.fig-body{padding:22px 20px;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:16px 16px;background-position:-1px -1px}
+.fig-body>svg{display:block;width:100%;height:auto;margin:0 auto}
+.fig-body.narrow>svg{max-width:640px}
+figcaption.fig-cap{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;padding:10px 16px;border-top:1px solid var(--rule);background:var(--panel);font-size:.85rem;color:var(--ink-2)}
+.fig-cap .fno{font-weight:700;color:var(--g);white-space:nowrap}
+.fig-cap .fsrc{margin-left:auto;font-size:.74rem;color:var(--ink-3)}
+.fig.slide .fig-body{padding:14px;background:var(--panel-2)}
+.fig.slide img{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.15);cursor:zoom-in;background:#fff}
+.fig.slide .fig-body.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:700px){.fig.slide .fig-body.two{grid-template-columns:1fr}}
+img[data-enc]{min-height:120px;background:var(--panel-2)}
+
+/* SVG ダイアグラム用クラス（テーマ追従） */
+svg.dg{font-family:var(--font);overflow:visible}
+.dg text{fill:var(--ink);font-size:14px}
+.dg .t-s{font-size:12px;fill:var(--ink-2)}
+.dg .t-xs{font-size:10.5px;fill:var(--ink-3)}
+.dg .t-b{font-weight:700}
+.dg .t-l{font-size:17px;font-weight:700}
+.dg .t-xl{font-size:24px;font-weight:700}
+.dg .t-acc{fill:var(--g)}
+.dg .t-inv{fill:var(--panel)}
+.dg .t-ok{fill:var(--ok)} .dg .t-ng{fill:var(--ng)}
+.dg .n{fill:var(--panel);stroke:var(--ink-2);stroke-width:1.4}
+.dg .n-soft{fill:var(--panel-2);stroke:var(--rule);stroke-width:1.2}
+.dg .n-acc{fill:var(--g-tint);stroke:var(--g);stroke-width:1.6}
+.dg .n-fill{fill:var(--g);stroke:var(--g)}
+.dg .n-ink{fill:var(--ink);stroke:var(--ink)}
+.dg .n-ok{fill:color-mix(in srgb,var(--ok) 12%,var(--panel));stroke:var(--ok);stroke-width:1.4}
+.dg .n-ng{fill:color-mix(in srgb,var(--ng) 10%,var(--panel));stroke:var(--ng);stroke-width:1.4}
+.dg .n-warn{fill:color-mix(in srgb,var(--warn) 12%,var(--panel));stroke:var(--warn);stroke-width:1.4}
+.dg .n-hl{fill:var(--marker);stroke:none}
+.dg .n-dash{fill:none;stroke:var(--ink-3);stroke-width:1.3;stroke-dasharray:5 4}
+.dg .e{fill:none;stroke:var(--ink-3);stroke-width:1.6;marker-end:url(#arr)}
+.dg .e-acc{fill:none;stroke:var(--g);stroke-width:2;marker-end:url(#arr-acc)}
+.dg .e-ng{fill:none;stroke:var(--ng);stroke-width:1.8;marker-end:url(#arr-ng)}
+.dg .e-plain{fill:none;stroke:var(--ink-3);stroke-width:1.4}
+.dg .e-dash{fill:none;stroke:var(--ink-3);stroke-width:1.4;stroke-dasharray:5 4;marker-end:url(#arr)}
+.dg .e-both{fill:none;stroke:var(--ink-3);stroke-width:1.6;marker-end:url(#arr);marker-start:url(#arr-s)}
+.dg .rule{stroke:var(--rule);stroke-width:1}
+.dg .ico{fill:none;stroke:var(--ink-2);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.dg .ico-acc{fill:none;stroke:var(--g);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dg .ico-inv{fill:none;stroke:var(--panel);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#arr path{fill:var(--ink-3)} #arr-s path{fill:var(--ink-3)} #arr-acc path{fill:var(--g)} #arr-ng path{fill:var(--ng)}
+
+/* HTMLベースの図解部品 */
+.flow{display:flex;align-items:stretch;gap:0;list-style:none;margin:0;padding:0;counter-reset:fl}
+.flow>li{flex:1;position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 14px 12px;margin-right:26px;font-size:.88rem;line-height:1.6}
+.flow>li:last-child{margin-right:0}
+.flow>li::after{content:"";position:absolute;right:-20px;top:50%;width:14px;height:14px;border-top:2.5px solid var(--g);border-right:2.5px solid var(--g);transform:translateY(-50%) rotate(45deg)}
+.flow>li:last-child::after{display:none}
+.flow>li b,.flow .fl-t{display:block;font-size:.95rem;margin-bottom:4px;color:var(--ink)}
+.flow.num>li{counter-increment:fl;padding-top:34px}
+.flow.num>li::before{content:counter(fl);position:absolute;left:12px;top:10px;width:22px;height:22px;border-radius:50%;background:var(--g);color:var(--panel);font-size:.75rem;font-weight:700;display:grid;place-items:center}
+.flow>li.acc{background:var(--g-tint);border-color:var(--g)}
+@media (max-width:760px){
+  .flow{flex-direction:column}
+  .flow>li{margin:0 0 24px}
+  .flow>li::after{right:auto;left:50%;top:auto;bottom:-19px;transform:translateX(-50%) rotate(135deg)}
+}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch}
+.vs>.vs-col{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:16px 18px;font-size:.9rem;line-height:1.7}
+.vs>.vs-col h5,.vs .vs-t{margin:0 0 8px;font-size:1rem;color:var(--ink);display:flex;gap:8px;align-items:center}
+.vs>.vs-col ul{margin:0;padding-left:1.2em}
+.vs>.vs-col.bad{border-top:4px solid var(--ink-3)}
+.vs>.vs-col.good{border-top:4px solid var(--g);background:var(--g-tint)}
+.vs>.vs-mid{display:grid;place-items:center;color:var(--g);font-weight:700}
+@media (max-width:700px){.vs{grid-template-columns:1fr}.vs>.vs-mid{transform:rotate(90deg)}}
+.boxes{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:12px}
+.boxes>div{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;font-size:.88rem;line-height:1.65}
+.boxes>div.acc{border-color:var(--g);background:var(--g-tint)}
+.boxes>div>b:first-child,.boxes .bx-t{display:flex;gap:8px;align-items:center;font-size:.98rem;margin-bottom:6px;color:var(--ink)}
+.boxes .bx-t .ic{color:var(--g)}
+@media (max-width:760px){.boxes{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.boxes{grid-template-columns:1fr}}
+.ladder{display:flex;align-items:flex-end;gap:10px}
+.ladder>div{flex:1;background:var(--panel);border:1px solid var(--rule);border-top:5px solid var(--g);border-radius:10px 10px 4px 4px;padding:12px;font-size:.85rem;line-height:1.55}
+.ladder>div:nth-child(1){min-height:110px;opacity:.82}.ladder>div:nth-child(2){min-height:150px;opacity:.88}.ladder>div:nth-child(3){min-height:190px;opacity:.94}.ladder>div:nth-child(4){min-height:230px}.ladder>div:nth-child(5){min-height:270px}
+.ladder .lv{display:block;font-weight:700;color:var(--g);font-size:.78rem}
+.ladder b{display:block;font-size:1rem;margin-bottom:4px}
+.ladder>div.acc{background:var(--g-tint);border-color:var(--g);opacity:1}
+@media (max-width:700px){.ladder{flex-direction:column-reverse;align-items:stretch}.ladder>div{min-height:0!important;opacity:1}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:14px 16px}
+.kpi .k-v{display:block;font-size:1.75rem;font-weight:700;line-height:1.25;color:var(--g);font-variant-numeric:tabular-nums}
+.kpi .k-v small{font-size:.9rem;margin-left:2px}
+.kpi .k-l{display:block;font-size:.82rem;color:var(--ink-2);line-height:1.5}
+.kpi .k-n{display:block;font-size:.72rem;color:var(--ink-3);margin-top:4px}
+.chat{display:flex;flex-direction:column;gap:10px;max-width:640px;margin:0 auto}
+.bub{max-width:88%;padding:11px 15px;border-radius:14px;font-size:.9rem;line-height:1.7;border:1px solid var(--rule);background:var(--panel)}
+.bub.me{align-self:flex-end;background:var(--g-tint);border-color:var(--g-line);border-bottom-right-radius:4px}
+.bub.ai{align-self:flex-start;border-bottom-left-radius:4px}
+.bub .who{display:block;font-size:.72rem;font-weight:700;color:var(--ink-3);margin-bottom:2px}
+.timeline{list-style:none;margin:0;padding:0 0 0 22px;border-left:3px solid var(--g-line)}
+.timeline>li{position:relative;margin:0 0 16px;padding-left:8px;font-size:.9rem;line-height:1.7}
+.timeline>li::before{content:"";position:absolute;left:-31px;top:6px;width:13px;height:13px;border-radius:50%;background:var(--panel);border:3px solid var(--g)}
+.timeline .tl-when{display:block;font-weight:700;color:var(--g);font-size:.82rem}
+.timeline .tl-t{display:block;font-weight:700}
+.checklist{list-style:none;padding:0;margin:0}
+.checklist li{position:relative;padding:8px 0 8px 32px;border-bottom:1px dashed var(--rule)}
+.checklist li:last-child{border-bottom:0}
+.checklist li::before{content:"";position:absolute;left:4px;top:13px;width:16px;height:16px;border:2px solid var(--g);border-radius:4px}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:5px;padding:1px 7px;margin:0 2px;vertical-align:.1em;border:1px solid var(--g-line);color:var(--g);background:var(--panel)}
+.tag.solid{background:var(--g);color:var(--panel);border-color:var(--g)}
+.tag.ok{color:var(--ok);border-color:var(--ok)} .tag.ng{color:var(--ng);border-color:var(--ng)} .tag.warn{color:var(--warn);border-color:var(--warn)}
+.fig-body .cap-in{font-size:.8rem;color:var(--ink-3);text-align:center;margin:10px 0 0}
+
+/* 事例カタログ（フィルタ） */
+.catalog-filter{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.catalog-filter button{border:1px solid var(--rule);background:var(--panel);border-radius:999px;padding:4px 12px;font-size:.8rem;cursor:pointer;color:var(--ink-2)}
+.catalog-filter button[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:var(--panel)}
+.lv-pill{display:inline-block;min-width:2.6em;text-align:center;border-radius:999px;font-size:.75rem;font-weight:700;padding:1px 8px;background:var(--g-tint);color:var(--g);border:1px solid var(--g-line)}
+
+/* ---------- ホーム ---------- */
+.home-hero{padding:60px 0 20px}
+.home-hero .kicker{color:var(--ink-3);font-size:.9rem;margin:0 0 10px}
+.home-hero h1{font-size:clamp(2.2rem,5vw,3.7rem);line-height:1.18;margin:0 0 18px;letter-spacing:0}
+.home-hero h1 .u{background:linear-gradient(transparent 64%,var(--marker) 64%)}
+.home-hero p.lead{font-size:1.08rem;color:var(--ink-2);max-width:40rem;margin:0}
+.route{margin:34px 0 10px;background:var(--panel);border:1px solid var(--rule);border-radius:16px;padding:18px 18px 8px;box-shadow:var(--shadow);overflow-x:auto}
+.route svg{min-width:760px;width:100%;height:auto;display:block}
+.route .st-name{font-size:13px;font-weight:700;fill:var(--ink)}
+.route .st-sub{font-size:11px;fill:var(--ink-3)}
+.route .line{fill:none;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+.route .draw{stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 1.6s cubic-bezier(.6,.1,.2,1) .2s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.route a{cursor:pointer}
+.route a:hover .st{stroke-width:5}
+.genres{display:grid;gap:14px;margin:30px 0}
+.genre-row{display:grid;grid-template-columns:8px 1fr auto;gap:0 20px;align-items:center;text-decoration:none;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:20px 22px 20px 0;overflow:hidden;box-shadow:var(--shadow)}
+.genre-row::before{content:"";align-self:stretch;margin:-20px 0;background:var(--rc)}
+.genre-row:hover{border-color:var(--rc)}
+.genre-row h3{margin:0 0 4px;font-size:1.2rem;line-height:1.45}
+.genre-row .gr-lec{font-size:.78rem;font-weight:700;color:var(--rc)}
+.genre-row p{margin:0;color:var(--ink-2);font-size:.9rem;line-height:1.7}
+.genre-row .gr-prog{text-align:right;font-size:.78rem;color:var(--ink-3);min-width:88px}
+.genre-row .gr-prog b{display:block;font-size:1.3rem;color:var(--rc)}
+.genre-row.r1{--rc:var(--g1)}.genre-row.r2{--rc:var(--g2)}.genre-row.r3{--rc:var(--g3)}.genre-row.r4{--rc:var(--g4)}.genre-row.r5{--rc:var(--g5)}
+.genre-row .star{display:inline-block;font-size:.72rem;background:var(--rc);color:var(--panel);border-radius:5px;padding:1px 7px;margin-left:8px;vertical-align:.15em}
+.home-sec{margin:56px 0}
+.home-sec>h2{font-size:1.45rem;margin:0 0 14px}
+
+/* 検索パネル */
+#searchPanel{position:fixed;z-index:60;top:calc(var(--top) + 8px);right:16px;width:min(560px,calc(100vw - 32px));max-height:min(70vh,640px);overflow:auto;background:var(--panel);border:1px solid var(--rule);border-radius:14px;box-shadow:0 20px 60px -20px rgba(0,0,0,.45);padding:10px}
+#searchPanel .sr-h{font-size:.78rem;color:var(--ink-3);padding:4px 8px 8px}
+#searchPanel a{display:block;padding:10px 12px;border-radius:9px;text-decoration:none;color:var(--ink)}
+#searchPanel a:hover,#searchPanel a.sel{background:var(--panel-2)}
+#searchPanel .r-t{font-weight:700;font-size:.92rem;line-height:1.5}
+#searchPanel .r-g{font-size:.72rem;font-weight:700}
+#searchPanel .r-s{font-size:.8rem;color:var(--ink-2);line-height:1.6}
+
+/* ライトボックス */
+#lightbox{position:fixed;inset:0;z-index:80;background:rgba(8,12,22,.88);display:grid;place-items:center;padding:20px;cursor:zoom-out}
+#lightbox img{max-width:100%;max-height:100%;border-radius:6px;background:#fff}
+
+/* ページ送り */
+.pager{display:flex;justify-content:space-between;gap:12px;margin:40px 0 0}
+.pager a{flex:1;display:block;text-decoration:none;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:14px 18px;font-size:.9rem}
+.pager a span{display:block;font-size:.75rem;color:var(--ink-3)}
+.pager a.next{text-align:right}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:8px 16px;border-radius:999px;font-size:.85rem;z-index:90}
+
+/* ---------- レスポンシブ ---------- */
+@media (max-width:1180px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .toc{position:fixed;z-index:50;left:0;top:var(--top);width:min(330px,88vw);transform:translateX(-102%);transition:transform .22s ease;background:var(--paper);box-shadow:var(--shadow)}
+  body.toc-open .toc{transform:none}
+  body.toc-open::after{content:"";position:fixed;inset:var(--top) 0 0 0;background:rgba(10,15,30,.35);z-index:45}
+  #menuBtn{display:inline-flex}
+  .tabs{position:fixed;z-index:42;left:0;right:0;bottom:0;top:auto;flex-direction:row;gap:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--rule)}
+  .tab{flex:1;width:auto;min-height:52px;margin:0 3px;border-radius:10px;transform:none;font-size:.66rem;padding:6px 2px}
+  .tab:hover,.tab[aria-current="page"]{width:auto;transform:none}
+  .tab .tl-long{display:none}
+  main{padding:0 22px 140px}
+}
+@media (max-width:640px){
+  :root{--top:54px}
+  .brand small{display:none}
+  .search-box{width:auto;flex:1}
+  .topic{padding:22px 18px 16px;border-radius:12px}
+  .topic>h3{font-size:1.18rem}
+  main{padding:0 12px 130px}
+  .genre-hero{padding:34px 0 24px}
+  .fig-body{padding:14px 10px}
+  .genre-row{grid-template-columns:6px 1fr;padding:16px 16px 16px 0}
+  .genre-row .gr-prog{grid-column:2;text-align:left;margin-top:6px}
+  .gate-card{padding:28px 20px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.route .draw{stroke-dashoffset:0}}
+@media print{.topbar,.toc,.tabs,.done-btn,.copy-btn{display:none!important}.layout{display:block}body{background:#fff}.topic{box-shadow:none;break-inside:avoid}}
+.fig-body.scroll{overflow-x:auto}
+.fig-body.scroll>svg{min-width:620px}
+.fig-body .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:700px){.fig-body .two-col{grid-template-columns:1fr}}
+.doc-sheet{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:18px 22px;font-size:.86rem;line-height:1.75;box-shadow:0 2px 0 var(--rule)}
+.doc-sheet h5{margin:0 0 6px;font-size:.95rem}
+.doc-sheet .art{font-weight:700;margin-top:10px}
+@media (max-width:640px){
+  .tb-spacer{display:none}
+  .search-box{flex:1;min-width:0}
+  .search-box input{font-size:.85rem}
+  .fig-body:has(>svg.dg){overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .fig-body>svg.dg{min-width:540px}
+  .fig-body.narrow>svg.dg{min-width:0}
+  .fig:has(.fig-body>svg.dg:not(.fit)) figcaption::after{content:"横にスクロールできます";flex-basis:100%;font-size:.7rem;color:var(--ink-3)}
+  .fig-body>svg.dg.fit{min-width:0}
+  .tab{font-size:.62rem}
+}
+</style>
+</head>
+<body data-genre="home">
+<svg class="defs" aria-hidden="true" focusable="false"><defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arr-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arr-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arr-ng" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+</defs>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.8"/><path d="M16 14.2c3.2-.3 5.6 1.9 5.6 5"/></symbol>
+<symbol id="i-ai" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 7V4M9.5 4h5"/><circle cx="9" cy="13" r="1.3"/><circle cx="15" cy="13" r="1.3"/><path d="M2 12v3M22 12v3M9.5 16.5h5"/></symbol>
+<symbol id="i-brain" viewBox="0 0 24 24"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h0a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h0a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol>
+<symbol id="i-docs" viewBox="0 0 24 24"><path d="M8 6h7l3 3v12H8z"/><path d="M5 18V3h8"/><path d="M11 14h4M11 17h4"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6 8.5 7 8.5-7"/></symbol>
+<symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.5"/><path d="M4.5 5.5v13c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5v-13M4.5 12c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></symbol>
+<symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3l7.7-7.7z"/><path d="M14.7 6.3 17 4l3 3-2.3 2.3"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6z"/><path d="m8.8 12 2.2 2.2 4.3-4.4"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M16 7l3 3M14 9l2 2"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5 2.5 20h19z"/><path d="M12 10v4.5M12 17.3v.2"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.7 2.7L16.2 9.5"/></symbol>
+<symbol id="i-cross" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h5l2 2.5h8A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.8 5.7 3.8 9s-1.2 6.3-3.8 9c-2.6-2.7-3.8-5.7-3.8-9S9.4 5.7 12 3z"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18.5a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 8.6a5 5 0 0 1-.5 9.9z"/></symbol>
+<symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4.5" y="5" width="15" height="10" rx="1.5"/><path d="M2.5 19h19l-2-4h-15z"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M6.5 8h11v3a5.5 5.5 0 0 1-11 0z"/><path d="M12 16.5V21"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M8 16v-4M12 16V9M16 16v-7M20 16V6"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14"/><path d="M5 7 2.5 13a2.8 2.8 0 0 0 5 0zM19 7l-2.5 6a2.8 2.8 0 0 0 5 0z"/><circle cx="12" cy="4" r="1"/></symbol>
+<symbol id="i-building" viewBox="0 0 24 24"><path d="M4 21V5l8-2v18M12 8h8v13M2.5 21h19"/><path d="M7 8h2M7 12h2M7 16h2M15 12h2M15 16h2"/></symbol>
+<symbol id="i-hotel" viewBox="0 0 24 24"><path d="M3 20V9h18v11M2 20h20"/><path d="M6 9V4h12v5M7 14h3M14 14h3M10 20v-3h4v3"/></symbol>
+<symbol id="i-care" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/><path d="M12 10.5v5M9.5 13h5"/></symbol>
+<symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 21V11l5 3v-3l5 3v-3l5 3V4h3v17z"/><path d="M7 18h2M12 18h2M17 18h1"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+<symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 21c-3.9 0-7-2.8-7-6.6 0-3.1 2.2-5.2 3.6-7 .5 2 1.6 3 2.6 3.4C11 7.5 12.5 4.8 15 3c-.2 3 1.2 4.6 2.4 6.1A7.5 7.5 0 0 1 19 14.4C19 18.2 15.9 21 12 21z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></symbol>
+<symbol id="i-idea" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+<symbol id="i-yen" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 7 3.5 5 3.5-5M12 12v6M9 13h6M9 15.5h6"/></symbol>
+<symbol id="i-loop" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-14.4 4.8M4 12A8 8 0 0 1 18.4 7.2"/><path d="M18.5 3v4.5H14M5.5 21v-4.5H10"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5a3 3 0 0 0 3.5 4M16 6h3.5a3 3 0 0 1-3.5 4M12 13v4M8.5 21h7M9.5 17h5v4h-5z"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19.5 8.5a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m14 6 4 4"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6z"/><path d="M9 4v14M15 6v14"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3"/></symbol>
+<symbol id="i-handshake" viewBox="0 0 24 24"><path d="m2.5 11.5 4-4 3.5 1.2 2.5-1.7 3 .2 6 4.3"/><path d="m21.5 11.5-4 4.5-3-.5M2.5 11.5l3.5 4.2 3 2.8c.8.7 2 .7 2.6-.1l.4-.4M9 13.5l3 3M11 12l3.5 3.5"/></symbol>
+<symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M3 10v4h3l7 4.5V5.5L6 10z"/><path d="M6 14l1.5 5.5h3L9.5 15.8M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 12.5 9 5 9-5M3 16.5l9 5 9-5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.3"/><circle cx="5" cy="18.5" r="2.3"/><circle cx="19" cy="18.5" r="2.3"/><path d="M11 7 6 16.5M13 7l5 9.5M7.3 18.5h9.4"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5M10 20v-5.5h4V20"/></symbol>
+<symbol id="i-hands" viewBox="0 0 24 24"><path d="M7 11V5.5a1.5 1.5 0 0 1 3 0V10M10 9.5V4a1.5 1.5 0 0 1 3 0v6M13 9.5V5a1.5 1.5 0 0 1 3 0v6.5M16 8.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-1a6.6 6.6 0 0 1-5.3-2.7L3 14.6a1.6 1.6 0 0 1 2.4-2.1L7 14"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+<symbol id="i-text" viewBox="0 0 24 24"><path d="M4 7V5h10v2M9 5v14M6.5 19h5M14 12v-1.5h6V12M17 10.5V19M15.5 19h3"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-quote" viewBox="0 0 24 24"><path d="M5 18c2.5-1 4-3.3 4-6.5V6H4v6h4M15 18c2.5-1 4-3.3 4-6.5V6h-5v6h4"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></symbol>
+<symbol id="i-bridge" viewBox="0 0 24 24"><path d="M2 16h20M2 11c4 0 6-3 10-3s6 3 10 3M5 11v5M9 9v7M15 9v7M19 11v5"/></symbol>
+</svg>
+
+<div id="gate" hidden>
+  <form class="gate-card" id="gateForm" autocomplete="off">
+    <h1><span class="gate-mark">AX学習ノート</span></h1>
+    <p>東大松尾研 AXエバンジェリスト講座2026の個人用学習ノートです。中身は暗号化されています。合言葉を入力すると開きます。</p>
+    <label for="gatePass">合言葉</label>
+    <input type="password" id="gatePass" autocomplete="current-password" required>
+    <label class="gate-row"><input type="checkbox" id="gateRemember" checked> この端末では次回から入力を省く</label>
+    <button class="btn" type="submit"><svg class="ic"><use href="#i-key"/></svg>開く</button>
+    <div class="gate-err" id="gateErr" role="status"></div>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" aria-label="目次を開く"><svg class="ic"><use href="#i-menu"/></svg></button>
+    <a class="brand" href="#/"><span class="brand-mark">AX</span><span><b>AX学習ノート</b><small>AXエバンジェリスト講座2026 全7回</small></span></a>
+    <span class="tb-spacer"></span>
+    <label class="search-box"><span class="sr">ノート内を検索</span><svg class="ic"><use href="#i-search"/></svg><input id="searchInput" type="search" placeholder="ノート内を検索（例：DPA、RAG、キャズム）" autocomplete="off"></label>
+    <button class="icon-btn" id="fsBtn" aria-label="文字サイズを切り替える" title="文字サイズ"><svg class="ic"><use href="#i-text"/></svg></button>
+    <button class="icon-btn" id="themeBtn" aria-label="ライト・ダークを切り替える" title="テーマ"><svg class="ic"><use href="#i-moon"/></svg></button>
+    <button class="icon-btn" id="lockBtn" aria-label="ロックする" title="この端末からロック"><svg class="ic"><use href="#i-lock"/></svg></button>
+  </header>
+  <div class="layout">
+    <aside class="toc" id="toc" aria-label="目次"></aside>
+    <main id="main" tabindex="-1"></main>
+    <nav class="tabs" id="tabs" aria-label="ジャンル"></nav>
+  </div>
+  <div id="searchPanel" hidden></div>
+  <div id="lightbox" hidden><img alt=""></div>
+</div>
+<script>window.AXCFG={"salt": "Cam7mC8ZPCkHRvAiW1Zg3g==", "iter": 310000, "base": "d/"};</script>
+
+<script>(()=>{
+'use strict';
+const CFG=window.AXCFG, DEV=!!CFG.dev;
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const te=new TextEncoder(), td=new TextDecoder();
+const LS={get(k,d){try{const v=localStorage.getItem('axnote.'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+          set(k,v){try{localStorage.setItem('axnote.'+k,JSON.stringify(v))}catch(e){}},
+          del(k){try{localStorage.removeItem('axnote.'+k)}catch(e){}}};
+const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const b64e=u=>{let s='';const a=new Uint8Array(u);for(let i=0;i<a.length;i+=0x8000)s+=String.fromCharCode.apply(null,a.subarray(i,i+0x8000));return btoa(s)};
+let KEY=null, M=null; const G={}; // manifest, genre html cache
+const imgCache=new Map();
+
+/* ---------- 表示設定 ---------- */
+const root=document.documentElement;
+function applyTheme(){const t=LS.get('theme','auto');const dark=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);root.dataset.theme=dark?'dark':'light';const b=$('#themeBtn use');if(b)b.setAttribute('href',dark?'#i-sun':'#i-moon')}
+function applyFs(){root.dataset.fs=LS.get('fs','m')}
+applyTheme();applyFs();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
+
+/* ---------- 暗号 ---------- */
+async function derive(pass){
+  const base=await crypto.subtle.importKey('raw',te.encode(pass),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt:b64d(CFG.salt),iterations:CFG.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},true,['decrypt']);
+}
+async function decrypt(buf){const u=new Uint8Array(buf);return crypto.subtle.decrypt({name:'AES-GCM',iv:u.slice(0,12)},KEY,u.slice(12))}
+async function gunzip(buf){const ds=new DecompressionStream('gzip');const s=new Blob([buf]).stream().pipeThrough(ds);return new Response(s).arrayBuffer()}
+async function loadText(name){
+  if(DEV) return window.AXDATA[name];
+  const r=await fetch(CFG.base+name+'.bin',{cache:'no-cache'}); if(!r.ok) throw new Error('fetch '+name);
+  return td.decode(await gunzip(await decrypt(await r.arrayBuffer())));
+}
+async function loadImg(path){
+  if(imgCache.has(path)) return imgCache.get(path);
+  const p=(async()=>{
+    if(DEV) return path;
+    const r=await fetch(CFG.base+path.replace(/\.webp$/,'.bin')); if(!r.ok) throw new Error('img');
+    return URL.createObjectURL(new Blob([await decrypt(await r.arrayBuffer())],{type:'image/webp'}));
+  })();
+  imgCache.set(path,p); return p;
+}
+
+/* ---------- 解錠 ---------- */
+async function tryKey(k){KEY=k;try{M=JSON.parse(await loadText('m'));return true}catch(e){KEY=null;return false}}
+async function unlockWith(pass,remember){
+  const k=await derive(pass);
+  if(!(await tryKey(k))) return false;
+  if(remember){LS.set('k',b64e(await crypto.subtle.exportKey('raw',k)))}
+  return true;
+}
+async function boot(){
+  if(DEV){M=JSON.parse(window.AXDATA.m);return start()}
+  const h=location.hash;const m=h.match(/[#&]k=([^&]+)/);
+  if(m){
+    const pass=decodeURIComponent(m[1]);
+    history.replaceState(null,'',location.pathname+location.search+'#/');
+    showGate('解錠しています…');
+    if(await unlockWith(pass,true)) return start();
+    showGate(); $('#gateErr').textContent='URLの合言葉が正しくありません。合言葉を入力してください。'; return;
+  }
+  const saved=LS.get('k',null);
+  if(saved){
+    try{const k=await crypto.subtle.importKey('raw',b64d(saved),{name:'AES-GCM'},true,['decrypt']);if(await tryKey(k)) return start()}catch(e){}
+    LS.del('k');
+  }
+  showGate();
+}
+function showGate(msg){
+  $('#gate').hidden=false;$('#app').hidden=true;
+  const f=$('#gateForm');
+  if(msg){$('#gateErr').textContent=msg}
+  f.onsubmit=async e=>{e.preventDefault();$('#gateErr').textContent='確認しています…';
+    const ok=await unlockWith($('#gatePass').value.trim(),$('#gateRemember').checked);
+    if(ok) start(); else $('#gateErr').textContent='合言葉が違います。もう一度入力してください。'};
+  setTimeout(()=>$('#gatePass')&&$('#gatePass').focus(),50);
+}
+
+/* ---------- 進捗 ---------- */
+let DONE=new Set(LS.get('done',[]));
+const saveDone=()=>LS.set('done',[...DONE]);
+const topicsOf=g=>g.chapters.flatMap(c=>c.topics);
+function pct(g){const t=topicsOf(g);if(!t.length)return 0;return Math.round(100*t.filter(x=>DONE.has(x.id)).length/t.length)}
+
+/* ---------- 起動 ---------- */
+function start(){
+  $('#gate').hidden=true;$('#app').hidden=false;
+  buildTabs();
+  window.addEventListener('hashchange',route);
+  route();
+  bindChrome();
+  if(!DEV) setTimeout(()=>{M.genres.forEach(g=>getGenre(g.id).catch(()=>{}))},2500);
+}
+function genreById(id){return M.genres.find(g=>g.id===id)}
+async function getGenre(id){if(!G[id]) G[id]=loadText(id);return G[id]}
+
+function buildTabs(){
+  const t=$('#tabs');
+  t.innerHTML=`<a class="tab home" href="#/" data-gid="home"><svg class="ic"><use href="#i-home"/></svg><span>ホーム</span></a>`+
+    M.genres.map((g,i)=>`<a class="tab t${i+1}" href="#/${g.id}" data-gid="${g.id}" title="${g.title}"><svg class="ic"><use href="#${g.icon}"/></svg><span>${g.tab}</span></a>`).join('');
+}
+function setCurrent(gid){
+  document.body.dataset.genre=gid;
+  $$('#tabs .tab').forEach(a=>a.setAttribute('aria-current',a.dataset.gid===gid?'page':'false'));
+}
+
+/* ---------- ルーター ---------- */
+let curGenre=null;
+async function route(){
+  const h=decodeURIComponent(location.hash.replace(/^#\/?/,''));
+  const [gid,tid]=h.split('/');
+  document.body.classList.remove('toc-open');
+  if(!gid||!genreById(gid)){curGenre=null;renderHome();window.scrollTo(0,0);return}
+  if(curGenre!==gid){await renderGenre(gid)}
+  if(tid){const el=document.getElementById(tid);if(el){el.scrollIntoView({block:'start'});markToc(tid)}}
+  else window.scrollTo(0,0);
+}
+
+/* ---------- ホーム ---------- */
+function renderHome(){
+  setCurrent('home');
+  $('#toc').innerHTML=homeToc();
+  const main=$('#main');
+  main.innerHTML=`<div class="page">${M.home}</div>`;
+  $$('[data-gprog]',main).forEach(el=>{const g=genreById(el.dataset.gprog);if(g)el.textContent=pct(g)+'%'});
+  enhance(main);
+  document.title='AX学習ノート';
+}
+function homeToc(){
+  return `<h2><svg class="ic"><use href="#i-map"/></svg>ジャンル</h2><p class="toc-lead">学びたいジャンルを選んでください</p>`+
+  M.genres.map((g,i)=>`<details open><summary><span class="lec" style="color:var(--g${i+1});border-color:var(--g${i+1})">${i+1}</span><a href="#/${g.id}" style="color:inherit;text-decoration:none">${g.title}</a></summary>
+   <ol>${g.chapters.map(c=>`<li><a href="#/${g.id}/${c.id}"><span class="chk" style="border-color:var(--g${i+1})"></span><span>${c.lec}　${c.title}</span></a></li>`).join('')}</ol></details>`).join('');
+}
+
+/* ---------- ジャンル ---------- */
+async function renderGenre(gid){
+  const g=genreById(gid), gi=M.genres.indexOf(g);
+  setCurrent(gid);
+  const main=$('#main');
+  main.innerHTML=`<div class="page"><p style="padding:80px 0;color:var(--ink-3)">読み込んでいます…</p></div>`;
+  let html='';
+  try{html=await getGenre(gid)}catch(e){main.innerHTML='<div class="page"><p style="padding:80px 0">読み込みに失敗しました。通信状態を確認して再読み込みしてください。</p></div>';return}
+  const prev=M.genres[gi-1], next=M.genres[gi+1];
+  main.innerHTML=`<div class="page">
+   <header class="genre-hero"><div class="gno"><span class="chip">ジャンル ${gi+1}</span>${g.lectures}</div>
+   <h1><span>${g.title}</span></h1><p class="lead">${g.lead}</p>
+   <nav class="chapter-map" aria-label="このジャンルの章">${g.chapters.map((c,ci)=>`<a href="#/${gid}/${c.id}"><span class="cm-lec">${c.lec}${c.lecturer?'｜'+c.lecturer:''}</span><span class="cm-t">${c.title}</span><span class="cm-n">${c.topics.length}項目</span></a>`).join('')}</nav></header>
+   ${html}
+   <nav class="pager">${prev?`<a href="#/${prev.id}"><span>前のジャンル</span>${prev.title}</a>`:'<a href="#/"><span>戻る</span>ホーム</a>'}${next?`<a class="next" href="#/${next.id}"><span>次のジャンル</span>${next.title}</a>`:'<a class="next" href="#/"><span>戻る</span>ホーム</a>'}</nav></div>`;
+  curGenre=gid;
+  numberGenre(main,gi+1);
+  enhance(main);
+  $('#toc').innerHTML=genreToc(g,gi);
+  observeTopics(main);
+  document.title=g.title+'｜AX学習ノート';
+}
+function genreToc(g,gi){
+  return `<h2><svg class="ic" style="color:var(--g)"><use href="#${g.icon}"/></svg>${g.title}</h2><p class="toc-lead">${g.lectures}</p>
+  <div class="toc-prog" title="読了率"><i style="width:${pct(g)}%"></i></div>`+
+  g.chapters.map((c,ci)=>`<details ${ci===0?'open':''} data-ch="${c.id}"><summary><span class="lec">${c.lec}</span><span>${c.title}</span></summary><ol>`+
+   c.topics.map((t,ti)=>`<li><a href="#/${g.id}/${t.id}" data-tid="${t.id}" class="${DONE.has(t.id)?'done':''}"><span class="chk"></span><span>${ci+1}-${ti+1}　${t.title}</span></a></li>`).join('')+`</ol></details>`).join('');
+}
+function numberGenre(main,gno){
+  let f=0;
+  $$('.chapter',main).forEach((ch,ci)=>{
+    $$('.topic',ch).forEach((t,ti)=>{
+      const h=$('h3',t); if(h&&!$('.tno',h)) h.insertAdjacentHTML('afterbegin',`<span class="tno">${ci+1}-${ti+1}</span>`);
+    });
+  });
+  $$('figure.fig',main).forEach(fig=>{f++;const c=$('figcaption',fig);if(c&&!$('.fno',c))c.insertAdjacentHTML('afterbegin',`<span class="fno">図${gno}-${f}</span>`)});
+}
+
+/* ---------- 共通の拡張 ---------- */
+function enhance(scope){
+  // 読了ボタン
+  $$('.topic',scope).forEach(t=>{
+    if($('.topic-foot',t))return;
+    const src=t.dataset.src?`<span class="src">${t.dataset.src}</span>`:'<span></span>';
+    const on=DONE.has(t.id);
+    t.insertAdjacentHTML('beforeend',`<div class="topic-foot">${src}<button class="done-btn" aria-pressed="${on}" data-done="${t.id}"><svg class="ic"><use href="#i-check"/></svg>${on?'読了':'読んだらチェック'}</button></div>`);
+  });
+  // プロンプトのコピー
+  $$('.prompt',scope).forEach(p=>{
+    if($('.prompt-h',p))return;
+    const label=p.dataset.label||'プロンプト';
+    p.insertAdjacentHTML('afterbegin',`<div class="prompt-h"><span>${label}</span><button class="copy-btn" type="button">コピー</button></div>`);
+  });
+  // 表のラップ
+  $$('table.tbl',scope).forEach(t=>{if(!t.parentElement.classList.contains('tbl-wrap')){const w=document.createElement('div');w.className='tbl-wrap';t.before(w);w.append(t)}});
+  // 画像
+  $$('img[data-path],.fig img',scope).forEach(img=>{
+    const p=img.getAttribute('data-path')||img.getAttribute('src');
+    if(!p||img.dataset.bound)return; img.dataset.bound=1;
+    if(!DEV){img.removeAttribute('src');img.setAttribute('data-enc',p);io.observe(img)}
+  });
+  // カタログのフィルタ
+  $$('[data-catalog]',scope).forEach(initCatalog);
+}
+const io=new IntersectionObserver(es=>es.forEach(async e=>{
+  if(!e.isIntersecting)return; const img=e.target; io.unobserve(img);
+  try{img.src=await loadImg(img.getAttribute('data-enc'));img.removeAttribute('data-enc')}catch(x){img.alt='（画像を読み込めませんでした）'}
+}),{rootMargin:'600px'});
+
+function initCatalog(box){
+  const rows=$$('[data-job]',box); const jobs=[...new Set(rows.map(r=>r.dataset.job))];
+  const bar=document.createElement('div');bar.className='catalog-filter';
+  bar.innerHTML=['すべて',...jobs].map((j,i)=>`<button type="button" aria-pressed="${i===0}" data-j="${i===0?'':j}">${j}</button>`).join('');
+  box.prepend(bar);
+  bar.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('button',bar).forEach(x=>x.setAttribute('aria-pressed',x===b));
+    rows.forEach(r=>r.hidden=!!b.dataset.j&&r.dataset.job!==b.dataset.j)});
+}
+
+/* ---------- 目次の現在地 ---------- */
+let topicObs=null;
+function observeTopics(main){
+  if(topicObs) topicObs.disconnect();
+  topicObs=new IntersectionObserver(es=>{
+    const vis=es.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
+    if(vis) markToc(vis.target.id,true);
+  },{rootMargin:'-20% 0px -70% 0px'});
+  $$('.topic',main).forEach(t=>topicObs.observe(t));
+}
+function markToc(tid,fromScroll){
+  $$('#toc a.on').forEach(a=>a.classList.remove('on'));
+  const a=$(`#toc a[data-tid="${CSS.escape(tid)}"]`);
+  if(a){a.classList.add('on');const d=a.closest('details');if(d&&!d.open)d.open=true;
+    if(fromScroll){const toc=$('#toc');const r=a.getBoundingClientRect(),tr=toc.getBoundingClientRect();if(r.top<tr.top+40||r.bottom>tr.bottom-40)toc.scrollTop+=r.top-tr.top-tr.height/3}}
+  if(fromScroll&&curGenre){history.replaceState(null,'','#/'+curGenre+'/'+tid)}
+}
+
+/* ---------- 検索 ---------- */
+let INDEX=null;
+async function buildIndex(){
+  if(INDEX) return INDEX;
+  const out=[];
+  for(const g of M.genres){
+    const html=await getGenre(g.id);
+    const doc=new DOMParser().parseFromString(`<div>${html}</div>`,'text/html');
+    $$('.topic',doc).forEach(t=>{const h=$('h3',t);out.push({g,id:t.id,title:h?h.textContent.trim():'',text:t.textContent.replace(/\s+/g,' ')})});
+    $$('.chapter',doc).forEach(c=>{const h=$('.chapter-head h2',c);if(h)out.push({g,id:c.id,title:h.textContent.trim(),text:($('.chapter-head',c)||c).textContent.replace(/\s+/g,' ')})});
+  }
+  return INDEX=out;
+}
+function snippet(text,q){const i=text.toLowerCase().indexOf(q.toLowerCase());if(i<0)return text.slice(0,80)+'…';const s=Math.max(0,i-36);
+  const esc=x=>x.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  return (s>0?'…':'')+esc(text.slice(s,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length,i+q.length+60))+'…'}
+async function doSearch(q){
+  const panel=$('#searchPanel'); q=q.trim();
+  if(!q){panel.hidden=true;return}
+  panel.hidden=false; if(!INDEX) panel.innerHTML='<div class="sr-h">索引を作成しています…</div>';
+  const idx=await buildIndex(); const terms=q.toLowerCase().split(/\s+/).filter(Boolean);
+  const hits=idx.map(r=>{const T=(r.title+' '+r.text).toLowerCase();if(!terms.every(t=>T.includes(t)))return null;
+     let s=0;terms.forEach(t=>{if(r.title.toLowerCase().includes(t))s+=10;s+=T.split(t).length-1});return {r,s}}).filter(Boolean).sort((a,b)=>b.s-a.s).slice(0,40);
+  panel.innerHTML=`<div class="sr-h">「${q.replace(/[<>&]/g,'')}」の検索結果：${hits.length}件${hits.length===40?'（上位40件）':''}</div>`+
+   (hits.length?hits.map(({r},i)=>`<a href="#/${r.g.id}/${r.id}" class="${i===0?'sel':''}"><span class="r-g" style="color:var(--g${M.genres.indexOf(r.g)+1})">${r.g.title}</span><span class="r-t">${r.title}</span><span class="r-s">${snippet(r.text,terms[0])}</span></a>`).join(''):'<div class="sr-h">一致する項目がありません。言葉を短くするか、別の言い方で探してください。</div>');
+}
+
+/* ---------- UI配線 ---------- */
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.append(t);setTimeout(()=>t.remove(),1600)}
+function bindChrome(){
+  if(bindChrome.done)return; bindChrome.done=1;
+  $('#menuBtn').onclick=()=>document.body.classList.toggle('toc-open');
+  document.addEventListener('click',e=>{
+    if(document.body.classList.contains('toc-open')&&!e.target.closest('#toc,#menuBtn'))document.body.classList.remove('toc-open');
+    const d=e.target.closest('[data-done]');
+    if(d){const id=d.dataset.done;const on=!DONE.has(id);on?DONE.add(id):DONE.delete(id);saveDone();
+      d.setAttribute('aria-pressed',on);d.lastChild.textContent=on?'読了':'読んだらチェック';
+      const a=$(`#toc a[data-tid="${CSS.escape(id)}"]`);if(a)a.classList.toggle('done',on);
+      const g=genreById(curGenre);const bar=$('#toc .toc-prog i');if(g&&bar)bar.style.width=pct(g)+'%';return}
+    const c=e.target.closest('.copy-btn');
+    if(c){const pre=$('pre',c.closest('.prompt'));navigator.clipboard.writeText(pre.innerText).then(()=>{c.textContent='コピーしました';c.classList.add('ok');setTimeout(()=>{c.textContent='コピー';c.classList.remove('ok')},1500)},()=>toast('コピーできませんでした'));return}
+    const im=e.target.closest('.fig.slide img');
+    if(im&&im.src){const lb=$('#lightbox');$('img',lb).src=im.src;$('img',lb).alt=im.alt;lb.hidden=false;return}
+    if(e.target.closest('#lightbox')){$('#lightbox').hidden=true;return}
+    if(!e.target.closest('#searchPanel,.search-box'))$('#searchPanel').hidden=true;
+    if(e.target.closest('#searchPanel a')){$('#searchPanel').hidden=true}
+  });
+  const si=$('#searchInput');let tmr;
+  si.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>doSearch(si.value),180)});
+  si.addEventListener('focus',()=>{buildIndex();if(si.value.trim())doSearch(si.value)});
+  si.addEventListener('keydown',e=>{if(e.key==='Enter'){const a=$('#searchPanel a.sel');if(a){location.hash=a.getAttribute('href');$('#searchPanel').hidden=true;si.blur()}}if(e.key==='Escape'){$('#searchPanel').hidden=true;si.blur()}});
+  document.addEventListener('keydown',e=>{if(e.key==='/'&&!/input|textarea/i.test(document.activeElement.tagName)){e.preventDefault();si.focus()}if(e.key==='Escape')$('#lightbox').hidden=true});
+  $('#themeBtn').onclick=()=>{const order=['auto','light','dark'];const cur=LS.get('theme','auto');const n=order[(order.indexOf(cur)+1)%3];LS.set('theme',n);applyTheme();toast({auto:'テーマ：端末の設定に合わせる',light:'テーマ：ライト',dark:'テーマ：ダーク'}[n])};
+  $('#fsBtn').onclick=()=>{const order=['m','l','xl'];const cur=LS.get('fs','m');const n=order[(order.indexOf(cur)+1)%3];LS.set('fs',n);applyFs();toast({m:'文字サイズ：標準',l:'文字サイズ：大',xl:'文字サイズ：特大'}[n])};
+  $('#lockBtn').onclick=()=>{if(confirm('この端末に保存した合言葉を消して、ロックします。よろしいですか？')){LS.del('k');location.hash='';location.reload()}};
+  if(DEV)$('#lockBtn').hidden=true;
+}
+boot();
+})();
+</script>
+</body>
+</html>
